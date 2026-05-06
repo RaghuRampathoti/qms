@@ -1,0 +1,17 @@
+# Node
+qms_frontend/node_modules
+qms_frontend/dist
+
+# Maven
+qms_backend/target
+qms_backend/.mvn
+qms_backend/mvnw
+qms_backend/mvnw.cmd
+
+# Git
+.git
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
