@@ -13,4 +13,11 @@ public interface EmailTemplateService {
             String cabinName);
 
     String buildYouAreNextEmail(String candidateName, String tokenId);
+
+    String buildNextRoundScheduledEmail(String candidateName,
+            String tokenId,
+            String interviewDate,
+            String interviewTime,
+            String venue,
+            String additionalNote);
 }

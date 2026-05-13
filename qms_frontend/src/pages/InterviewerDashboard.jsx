@@ -216,7 +216,7 @@ export default function InterviewerDashboard() {
                     </div>
                     {currentToken && (
                       <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border ${currentToken.status === 'IN_PROGRESS' ? 'bg-blue-50 text-blue-700 border-blue-100' : 'bg-amber-50 text-amber-700 border-amber-100'}`}>
-                        {currentToken.status === 'IN_PROGRESS' ? 'Ã¢Å¡Â¡ In Progress' : 'Ã°Å¸â€œÅ¾ Called'}
+                        {currentToken.status === 'IN_PROGRESS' ? ' In Progress' : 'Called'}
                       </span>
                     )}
                   </div>
@@ -311,8 +311,8 @@ export default function InterviewerDashboard() {
                         <span className="text-base tracking-tight uppercase">Call Next Token</span>
                       </button>
                       <div className="mt-6 flex items-center justify-center gap-3">
-                        {cabinStatus === 'INACTIVE' && <span className="text-[10px] bg-red-50 text-red-500 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-red-100">Ã¢Å¡Â Ã¯Â¸Â Panel Inactive</span>}
-                        {queue.length === 0 && cabinStatus !== 'INACTIVE' && <span className="text-[10px] bg-amber-50 text-amber-600 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-amber-100">Ã¢â€žÂ¹Ã¯Â¸Â Queue Empty</span>}
+                        {cabinStatus === 'INACTIVE' && <span className="text-[10px] bg-red-50 text-red-500 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-red-100">Panel Inactive</span>}
+                        {queue.length === 0 && cabinStatus !== 'INACTIVE' && <span className="text-[10px] bg-amber-50 text-amber-600 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-amber-100">Queue Empty</span>}
                       </div>
                     </div>
                   )}
@@ -427,7 +427,7 @@ export default function InterviewerDashboard() {
                   </h3>
                   <ul className="space-y-6">
                     {[
-                      { icon: Clock, text: "Target interview duration: 20Ã¢â‚¬â€œ30 minutes per candidate.", color: "text-amber-500", bg: "bg-amber-50" },
+                      { icon: Clock, text: "Target interview duration: 20-30 minutes per candidate.", color: "text-amber-500", bg: "bg-amber-50" },
                       { icon: MessageSquare, text: "Provide objective feedback on technical and behavioral skills.", color: "text-blue-500", bg: "bg-blue-50" },
                       { icon: Star, text: "Maintain consistent ratings across all candidates.", color: "text-blue-500", bg: "bg-blue-50" }
                     ].map((item, i) => (
@@ -469,7 +469,7 @@ export default function InterviewerDashboard() {
                 <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[9px] mt-1">Token #{completedToken}</p>
                 <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-100 rounded-xl">
                   <AlertTriangle size={12} className="text-amber-500" />
-                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Mandatory Ã¢â‚¬â€ cannot be skipped</span>
+                  <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Mandatory cannot be skipped</span>
                 </div>
               </div>
 

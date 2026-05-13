@@ -46,6 +46,13 @@ public class Feedback {
 
     private String improvements;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean nextRoundScheduled = false;
+
+    private String nextRoundDate;
+    private String nextRoundTime;
+    private String nextRoundVenue;
+
     @CreationTimestamp
     private LocalDateTime submittedAt;
 }

@@ -234,4 +234,85 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
 
         return wrap(AMBER_MID, body);
     }
+
+    @Override
+    public String buildNextRoundScheduledEmail(String candidateName,
+            String tokenId,
+            String interviewDate,
+            String interviewTime,
+            String venue,
+            String additionalNote) {
+
+        String BLUE_DARK = "#1d4ed8";
+        String BLUE_MID = "#2563eb";
+        String BLUE_LIGHT = "#dbeafe";
+
+        String venueRow = (venue != null && !venue.isBlank())
+                ? "<tr>" +
+                  "  <td style=\"padding:8px 0;font-size:14px;color:" + TEXT_MUTED + ";width:120px;\">Venue</td>" +
+                  "  <td style=\"padding:8px 0;font-size:14px;font-weight:700;color:" + TEXT_MAIN + ";\">" + venue + "</td>" +
+                  "</tr>"
+                : "";
+
+        String noteBox = (additionalNote != null && !additionalNote.isBlank())
+                ? "<div style=\"background-color:" + BLUE_LIGHT + ";border-left:4px solid " + BLUE_MID + ";" +
+                  "             border-radius:6px;padding:16px 20px;margin-top:20px;\">" +
+                  "  <p style=\"margin:0 0 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:" + BLUE_DARK + ";\">Note from Admin</p>" +
+                  "  <p style=\"margin:0;font-size:14px;color:" + BLUE_DARK + ";line-height:1.6;\">" + additionalNote + "</p>" +
+                  "</div>"
+                : "";
+
+        String body =
+                "<h2 style=\"margin:0 0 8px;font-size:24px;font-weight:800;color:" + TEXT_MAIN + ";\">" +
+                "  &#127881; Congratulations, " + candidateName + "!" +
+                "</h2>" +
+                "<p style=\"margin:0 0 28px;font-size:15px;color:" + TEXT_MUTED + ";line-height:1.6;\">" +
+                "  You have been selected for the <strong>Next Round</strong> of the interview process. " +
+                "  Please find your scheduled interview details below." +
+                "</p>" +
+
+                "<div style=\"background-color:" + BLUE_MID + ";border-radius:10px;padding:24px;text-align:center;margin-bottom:24px;\">" +
+                "  <p style=\"margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#bfdbfe;font-weight:600;\">Your Token</p>" +
+                "  <p style=\"margin:0;font-size:28px;font-weight:800;color:#ffffff;letter-spacing:3px;font-family:'Courier New',monospace;\">" + tokenId + "</p>" +
+                "</div>" +
+
+                "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" " +
+                "       style=\"border:1px solid " + BLUE_LIGHT + ";border-radius:10px;overflow:hidden;margin-bottom:20px;\">" +
+                "<tr style=\"background-color:" + BLUE_LIGHT + ";\">" +
+                "  <td colspan=\"2\" style=\"padding:12px 20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:" + BLUE_DARK + ";\">" +
+                "    &#128197; Interview Schedule" +
+                "  </td>" +
+                "</tr>" +
+                "<tr>" +
+                "  <td style=\"padding:14px 20px 6px;font-size:14px;color:" + TEXT_MUTED + ";width:120px;\">Date</td>" +
+                "  <td style=\"padding:14px 20px 6px;font-size:14px;font-weight:700;color:" + TEXT_MAIN + ";\">" + interviewDate + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "  <td style=\"padding:6px 20px 14px;font-size:14px;color:" + TEXT_MUTED + ";\">Time</td>" +
+                "  <td style=\"padding:6px 20px 14px;font-size:14px;font-weight:700;color:" + TEXT_MAIN + ";\">" + interviewTime + "</td>" +
+                "</tr>" +
+                venueRow +
+                "</table>" +
+
+                noteBox +
+
+                "<div style=\"background-color:#f0fdf4;border-left:4px solid #22c55e;border-radius:6px;padding:16px 20px;margin-top:20px;\">" +
+                "  <p style=\"margin:0 0 8px;font-size:13px;font-weight:700;color:#15803d;\">&#9989; Tips to Prepare</p>" +
+                "  <ul style=\"margin:0;padding-left:18px;font-size:13px;color:#15803d;line-height:1.8;\">" +
+                "    <li>Review your previous interview performance and feedback.</li>" +
+                "    <li>Carry an updated copy of your resume.</li>" +
+                "    <li>Arrive 10 minutes early at the venue.</li>" +
+                "    <li>Stay confident - you earned this next round!</li>" +
+                "  </ul>" +
+                "</div>" +
+
+                "<p style=\"margin:28px 0 0;font-size:15px;color:" + TEXT_MAIN + ";line-height:1.6;\">" +
+                "  We look forward to seeing you. Best of luck! &#127919;" +
+                "</p>" +
+                "<p style=\"margin:4px 0 0;font-size:14px;color:" + TEXT_MUTED + ";\">" +
+                "  &mdash; <strong>QMS Interview Team</strong>" +
+                "</p>";
+
+        return wrap(BLUE_MID, body);
+    }
 }

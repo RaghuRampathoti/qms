@@ -8,6 +8,7 @@ import ManageFeedback from './pages/ManageFeedback'
 import ManageUsers from './pages/ManageUsers'
 import InterviewerFeedback from './pages/InterviewerFeedback'
 import CandidateRegisterPage from './pages/CandidateRegisterPage'
+import NextRound from './pages/NextRound'
 
 const ProtectedRoute = ({ children, role }) => {
   const token = localStorage.getItem('token')
@@ -66,6 +67,14 @@ function App() {
           element={
             <ProtectedRoute role={['ADMIN', 'SUPER_ADMIN']}>
               <ManageFeedback />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/next-round"
+          element={
+            <ProtectedRoute role={['ADMIN', 'SUPER_ADMIN']}>
+              <NextRound />
             </ProtectedRoute>
           }
         />

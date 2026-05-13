@@ -21,5 +21,9 @@ public class FeedbackResponse {
     private String comments;
     private String strengths;
     private String improvements;
+    private boolean nextRoundScheduled;
+    private String nextRoundDate;
+    private String nextRoundTime;
+    private String nextRoundVenue;
     private LocalDateTime submittedAt;
 }

@@ -120,8 +120,10 @@ export default function ManageCandidates() {
     }, [fetchCandidates])
 
     useEffect(() => {
-        const apiBase = import.meta.env.VITE_API_URL || ''
-        setQrUrl(`${apiBase}/api/public/qr?t=${Date.now()}`)
+        // Generate QR pointing to the frontend /register page
+        // Using QuickChart which supports CORS and is very reliable for production
+        const registerUrl = encodeURIComponent(`${window.location.origin}/register`)
+        setQrUrl(`https://quickchart.io/qr?text=${registerUrl}&size=300`)
     }, [])
 
     const showMsg = (type, text) => {
@@ -523,7 +525,21 @@ export default function ManageCandidates() {
                     </div>
 
                     <div className="flex gap-4">
-                        <a href={qrUrl} download className="flex-1 bg-blue-600 text-white py-4 rounded-[1.25rem] font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20">Download QR</a>
+                        <button onClick={async () => {
+                            try {
+                                const response = await fetch(qrUrl)
+                                if (!response.ok) throw new Error('Fetch failed')
+                                const blob = await response.blob()
+                                const url = URL.createObjectURL(blob)
+                                const a = document.createElement('a')
+                                a.href = url
+                                a.download = 'registration-qr.png'
+                                a.click()
+                                URL.revokeObjectURL(url)
+                            } catch {
+                                window.open(qrUrl, '_blank')
+                            }
+                        }} className="flex-1 bg-blue-600 text-white py-4 rounded-[1.25rem] font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20">Download QR</button>
                         <button onClick={() => {
                             navigator.clipboard.writeText(`${window.location.origin}/register`);
                             showMsg('success', 'Link copied to clipboard!');

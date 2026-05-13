@@ -2,6 +2,7 @@ package com.qms.queue.service.ServiceImpl;
 
 import com.qms.queue.dto.common.PageResponse;
 import com.qms.queue.dto.request.FeedbackRequest;
+import com.qms.queue.dto.request.ScheduleNextRoundRequest;
 import com.qms.queue.dto.response.FeedbackResponse;
 import com.qms.queue.entity.*;
 import com.qms.queue.enums.FeedbackResult;
@@ -12,6 +13,8 @@ import com.qms.queue.exceptions.ResourceNotFoundException;
 import com.qms.queue.repository.FeedbackRepository;
 import com.qms.queue.repository.TokenRepository;
 import com.qms.queue.repository.UserRepository;
+import com.qms.queue.service.EmailService;
+import com.qms.queue.service.EmailTemplateService;
 import com.qms.queue.service.FeedbackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +30,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final EmailTemplateService emailTemplateService;
 
     @Override
     @Transactional
@@ -177,7 +182,50 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .comments(f.getComments())
                 .strengths(f.getStrengths())
                 .improvements(f.getImprovements())
+                .nextRoundScheduled(f.isNextRoundScheduled())
+                .nextRoundDate(f.getNextRoundDate())
+                .nextRoundTime(f.getNextRoundTime())
+                .nextRoundVenue(f.getNextRoundVenue())
                 .submittedAt(f.getSubmittedAt())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void scheduleNextRound(ScheduleNextRoundRequest request) {
+        Feedback feedback = feedbackRepository.findById(request.getFeedbackId())
+                .orElseThrow(() -> new ResourceNotFoundException("Feedback not found: " + request.getFeedbackId()));
+
+        if (feedback.getResult() != FeedbackResult.NEXT_ROUND) {
+            throw new BusinessException("Only candidates with NEXT_ROUND result can be scheduled for next round");
+        }
+
+        Candidate candidate = feedback.getCandidate();
+        String candidateEmail = candidate.getEmail();
+
+        if (candidateEmail == null || candidateEmail.isBlank()) {
+            throw new BusinessException("Candidate does not have a valid email address");
+        }
+
+        String emailBody = emailTemplateService.buildNextRoundScheduledEmail(
+                candidate.getFullName(),
+                feedback.getToken().getTokenId(),
+                request.getInterviewDate(),
+                request.getInterviewTime(),
+                request.getVenue(),
+                request.getAdditionalNote()
+        );
+
+        emailService.sendEmail(
+                candidateEmail,
+                "Next Round Interview Scheduled — " + candidate.getFullName(),
+                emailBody
+        );
+
+        feedback.setNextRoundScheduled(true);
+        feedback.setNextRoundDate(request.getInterviewDate());
+        feedback.setNextRoundTime(request.getInterviewTime());
+        feedback.setNextRoundVenue(request.getVenue());
+        feedbackRepository.save(feedback);
     }
 }

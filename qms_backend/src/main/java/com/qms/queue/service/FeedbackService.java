@@ -2,6 +2,7 @@ package com.qms.queue.service;
 
 import com.qms.queue.dto.common.PageResponse;
 import com.qms.queue.dto.request.FeedbackRequest;
+import com.qms.queue.dto.request.ScheduleNextRoundRequest;
 import com.qms.queue.dto.response.FeedbackResponse;
 
 public interface FeedbackService {
@@ -18,4 +19,6 @@ public interface FeedbackService {
     PageResponse<FeedbackResponse> getByInterviewer(String username, int page, int size);
     
     FeedbackResponse update(Long id, FeedbackRequest request, String interviewerUsername);
+
+    void scheduleNextRound(ScheduleNextRoundRequest request);
 }

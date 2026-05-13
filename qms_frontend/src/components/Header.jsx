@@ -81,7 +81,7 @@ export default function Header({ title, subtitle, user, cabin, cabinStatus }) {
             <div className="flex items-center gap-2 mt-1">
               <p className="text-slate-600 font-bold text-[10px] uppercase tracking-widest">
                 {subtitle && <span className="opacity-60 mr-1">{subtitle}</span>}
-                {user?.userName}{cabin ? ` Ã‚Â· ${cabin.cabinName}` : ''}
+                {user?.userName}{cabin ? ` . ${cabin.cabinName}` : ''}
               </p>
             </div>
           </motion.div>

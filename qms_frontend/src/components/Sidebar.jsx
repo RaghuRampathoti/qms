@@ -8,7 +8,8 @@ import {
   MessageSquare,
   MapPin,
   Menu,
-  X
+  X,
+  ArrowRight
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -18,6 +19,7 @@ const adminItems = [
   { icon: MapPin, label: 'Panels', path: '/admin/cabins' },
   { icon: Users, label: 'Manage Users', path: '/admin/users' },
   { icon: MessageSquare, label: 'Feedback', path: '/admin/feedback' },
+  { icon: ArrowRight, label: 'Next Round', path: '/admin/next-round' },
 ]
 
 const interviewerItems = [

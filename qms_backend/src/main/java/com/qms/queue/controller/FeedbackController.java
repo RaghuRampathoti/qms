@@ -3,6 +3,7 @@ package com.qms.queue.controller;
 import com.qms.queue.dto.common.ApiResponse;
 import com.qms.queue.dto.common.PageResponse;
 import com.qms.queue.dto.request.FeedbackRequest;
+import com.qms.queue.dto.request.ScheduleNextRoundRequest;
 import com.qms.queue.dto.response.FeedbackResponse;
 import com.qms.queue.service.FeedbackService;
 import jakarta.validation.Valid;
@@ -80,5 +81,13 @@ public class FeedbackController {
             @RequestBody @Valid FeedbackRequest request) {
         return ResponseEntity.ok(ApiResponse.success("Feedback updated successfully",
                 feedbackService.update(id, request, username)));
+    }
+
+    @PostMapping("/schedule-next-round")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> scheduleNextRound(
+            @RequestBody @Valid ScheduleNextRoundRequest request) {
+        feedbackService.scheduleNextRound(request);
+        return ResponseEntity.ok(ApiResponse.success("Next round scheduled and email sent", null));
     }
 }

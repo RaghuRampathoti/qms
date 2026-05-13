@@ -34,7 +34,7 @@ export default function ManageCabins() {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
-  useEffect(() => { 
+  useEffect(() => {
     fetchData()
     const interval = setInterval(fetchData, 10000)
     return () => clearInterval(interval)
@@ -309,7 +309,7 @@ export default function ManageCabins() {
                         <div className="flex items-center space-x-2 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2 mb-3">
                           <AlertTriangle size={14} className="text-amber-500 shrink-0" />
                           <p className="text-xs text-amber-700 font-medium">
-                            No interviewers assigned Ã¢â‚¬â€ panel cannot be activated
+                            No interviewers assigned panel cannot be activated
                           </p>
                         </div>
                       )}
