@@ -60,7 +60,7 @@ const STATUS_FILTERS = ['ALL', 'WAITING', 'CALLED', 'IN_PROGRESS', 'COMPLETED', 
 const EMPTY_FORM = {
     fullName: '', mobileNumber: '', email: '',
     currentLocation: '', applyingPosition: '', purposeOfVisit: '',
-    qualification: '', yearOfPassOut: '', reference: ''
+    qualification: '', customQualification: '', yearOfPassOut: '', reference: ''
 }
 
 const QUALIFICATIONS = [
@@ -181,7 +181,8 @@ export default function ManageCandidates() {
             if (formData.currentLocation?.trim()) fd.append('currentLocation', formData.currentLocation.trim())
             if (formData.applyingPosition?.trim()) fd.append('applyingPosition', formData.applyingPosition.trim())
             if (formData.purposeOfVisit?.trim()) fd.append('purposeOfVisit', formData.purposeOfVisit.trim())
-            if (formData.qualification?.trim()) fd.append('qualification', formData.qualification.trim())
+            const finalQual = formData.qualification === 'Other' ? formData.customQualification?.trim() : formData.qualification?.trim()
+            if (finalQual) fd.append('qualification', finalQual)
             if (formData.yearOfPassOut?.trim()) fd.append('yearOfPassOut', formData.yearOfPassOut.trim())
             if (formData.reference?.trim()) fd.append('reference', formData.reference.trim())
             if (photoFile) fd.append('photo', photoFile)
@@ -488,7 +489,7 @@ export default function ManageCandidates() {
                         {totalPages > 1 && (
                             <div className="px-8 py-6 bg-white/30 border-t border-blue-50 flex items-center justify-between">
                                 <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">
-                                    Page <span className="text-slate-900">{page + 1}</span> of {totalPages} Ã‚Â· <span className="text-slate-900">{totalElements}</span> Candidates
+                                    Page <span className="text-slate-900">{page + 1}</span> of {totalPages} <span className="text-slate-900">{totalElements}</span> Candidates
                                 </p>
                                 <div className="flex items-center space-x-3">
                                     <button
@@ -559,7 +560,7 @@ export default function ManageCandidates() {
                             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                                 Photo <span className="text-slate-600 font-normal normal-case">(optional)</span>
                             </label>
-                            <span className="text-[9px] font-bold text-blue-600/60 uppercase">JPG only Ã‚Â· max 10 MB</span>
+                            <span className="text-[9px] font-bold text-blue-600/60 uppercase">JPG only max 10 MB</span>
                         </div>
                         <input
                             ref={photoInputRef}
@@ -590,11 +591,11 @@ export default function ManageCandidates() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <FormField icon={User} label="FULL NAME" required value={formData.fullName} onChange={v => setFormData(f => ({ ...f, fullName: v }))} placeholder="Rahul Sharma" />
-                        <FormField icon={Mail} label="EMAIL ADDRESS" required type="email" value={formData.email} onChange={v => setFormData(f => ({ ...f, email: v }))} placeholder="rahul@example.com" />
+                        <FormField icon={Mail} label="EMAIL ADDRESS" required type="email" value={formData.email} onChange={v => setFormData(f => ({ ...f, email: v }))} placeholder="rahul@gmail.com" pattern="^[a-zA-Z0-9._%+\-]+@gmail\.com$" title="Please enter a valid @gmail.com address (e.g., name@gmail.com)" />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <FormField icon={Phone} label="MOBILE NUMBER" required type="tel" value={formData.mobileNumber} onChange={v => setFormData(f => ({ ...f, mobileNumber: v }))} placeholder="9876543210" hint="10-digit number" />
-                        <FormField icon={Briefcase} label="APPLYING POSITION" value={formData.applyingPosition} onChange={v => setFormData(f => ({ ...f, applyingPosition: v }))} placeholder="Senior Frontend Dev" />
+                        <FormField icon={Briefcase} label="APPLYING POSITION" required value={formData.applyingPosition} onChange={v => setFormData(f => ({ ...f, applyingPosition: v }))} placeholder="Senior Frontend Dev" />
                     </div>
 
                     {/* Qualification fields */}
@@ -603,18 +604,32 @@ export default function ManageCandidates() {
                             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Qualification</label>
                             <div className="relative group">
                                 <GraduationCap size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-600 transition-colors" />
-                                <select value={formData.qualification} onChange={e => setFormData(f => ({ ...f, qualification: e.target.value }))} className="w-full pl-14 pr-6 py-4 bg-white border border-transparent rounded-[1.25rem] text-sm font-bold focus:outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all appearance-none">
+                                <select required value={formData.qualification} onChange={e => setFormData(f => ({ ...f, qualification: e.target.value }))} className="w-full pl-14 pr-6 py-4 bg-white border border-transparent rounded-[1.25rem] text-sm font-bold focus:outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all appearance-none">
                                     <option value="">Select Qualification</option>
                                     {QUALIFICATIONS.map(q => <option key={q} value={q}>{q}</option>)}
                                 </select>
                             </div>
+                            <AnimatePresence>
+                                {formData.qualification === 'Other' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="pt-2">
+                                            <FormField icon={GraduationCap} label="SPECIFY QUALIFICATION" required value={formData.customQualification || ''} onChange={v => setFormData(f => ({ ...f, customQualification: v }))} placeholder="Please specify your education" />
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
-                        <FormField icon={Calendar} label="YEAR OF PASS OUT" value={formData.yearOfPassOut} onChange={v => setFormData(f => ({ ...f, yearOfPassOut: v }))} placeholder="e.g. 2022" />
+                        <FormField icon={Calendar} label="YEAR OF PASS OUT" required value={formData.yearOfPassOut} onChange={v => setFormData(f => ({ ...f, yearOfPassOut: v }))} placeholder="e.g. 2022" />
                     </div>
 
-                    <FormField icon={MapPin} label="CURRENT LOCATION" value={formData.currentLocation} onChange={v => setFormData(f => ({ ...f, currentLocation: v }))} placeholder="Bengaluru, KA" />
-                    <FormField icon={ClipboardList} label="PURPOSE OF VISIT" value={formData.purposeOfVisit} onChange={v => setFormData(f => ({ ...f, purposeOfVisit: v }))} placeholder="Technical Interview - Round 1" />
-                    <FormField icon={UserCheck} label="REFERENCE" value={formData.reference} onChange={v => setFormData(f => ({ ...f, reference: v }))} placeholder="Referred by (if any)" />
+                    <FormField icon={MapPin} label="CURRENT LOCATION" required value={formData.currentLocation} onChange={v => setFormData(f => ({ ...f, currentLocation: v }))} placeholder="Bengaluru, KA" />
+                    <FormField icon={ClipboardList} label="PURPOSE OF VISIT" required value={formData.purposeOfVisit} onChange={v => setFormData(f => ({ ...f, purposeOfVisit: v }))} placeholder="Technical Interview - Round 1" />
+                    <FormField icon={UserCheck} label="REFERENCE (OPTIONAL)" value={formData.reference} onChange={v => setFormData(f => ({ ...f, reference: v }))} placeholder="Referred by (optional)" />
 
                     {/* Resume Upload - PDF only */}
                     <div className="space-y-2">
@@ -622,7 +637,7 @@ export default function ManageCandidates() {
                             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                                 Resume <span className="text-slate-600 font-normal normal-case">(optional)</span>
                             </label>
-                            <span className="text-[9px] font-bold text-blue-600/60 uppercase">PDF only Ã‚Â· max 10 MB</span>
+                            <span className="text-[9px] font-bold text-blue-600/60 uppercase">PDF only max 10 MB</span>
                         </div>
                         <input ref={resumeInputRef} type="file" accept=".pdf,application/pdf" className="hidden" onChange={handleResumeChange} />
                         {!resumeFile ? (
@@ -784,7 +799,7 @@ function ModalWrapper({ isOpen, onClose, children, size = "max-w-md" }) {
     )
 }
 
-function FormField({ icon: Icon, label, value, onChange, placeholder, required, type = 'text', hint }) {
+function FormField({ icon: Icon, label, value, onChange, placeholder, required, type = 'text', hint, pattern, title }) {
     return (
         <div className="space-y-2">
             <div className="flex items-center justify-between ml-1">
@@ -801,6 +816,8 @@ function FormField({ icon: Icon, label, value, onChange, placeholder, required, 
                     value={value}
                     onChange={e => onChange(e.target.value)}
                     placeholder={placeholder}
+                    pattern={pattern}
+                    title={title}
                     className="w-full pl-14 pr-6 py-4 bg-white border border-transparent rounded-[1.25rem] text-sm font-bold focus:outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all"
                 />
             </div>

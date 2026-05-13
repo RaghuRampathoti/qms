@@ -11,7 +11,7 @@ import axios from 'axios'
 const EMPTY = {
     fullName: '', mobileNumber: '', email: '',
     currentLocation: '', applyingPosition: '', purposeOfVisit: '',
-    qualification: '', yearOfPassOut: '', reference: ''
+    qualification: '', customQualification: '', yearOfPassOut: '', reference: ''
 }
 
 const QUALIFICATIONS = [
@@ -88,7 +88,8 @@ export default function CandidateRegisterPage() {
             if (form.currentLocation?.trim()) fd.append('currentLocation', form.currentLocation.trim())
             if (form.applyingPosition?.trim()) fd.append('applyingPosition', form.applyingPosition.trim())
             if (form.purposeOfVisit?.trim()) fd.append('purposeOfVisit', form.purposeOfVisit.trim())
-            if (form.qualification?.trim()) fd.append('qualification', form.qualification.trim())
+            const finalQual = form.qualification === 'Other' ? form.customQualification?.trim() : form.qualification?.trim()
+            if (finalQual) fd.append('qualification', finalQual)
             if (form.yearOfPassOut?.trim()) fd.append('yearOfPassOut', form.yearOfPassOut.trim())
             if (form.reference?.trim()) fd.append('reference', form.reference.trim())
             if (photoFile) fd.append('photo', photoFile)
@@ -156,7 +157,7 @@ export default function CandidateRegisterPage() {
                                 {/* Photo Upload */}
                                 <div>
                                     <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-                                        Photo <span className="text-slate-600 font-normal normal-case">(optional Ã‚Â· JPG only)</span>
+                                        Photo <span className="text-slate-600 font-normal normal-case">(optional JPG only)</span>
                                     </p>
                                     <input
                                         ref={photoInputRef}
@@ -199,7 +200,7 @@ export default function CandidateRegisterPage() {
                                                 <ImageIcon size={16} />
                                                 <span>{photoFile ? 'Change Photo' : 'Upload Photo'}</span>
                                             </button>
-                                            <p className="text-xs text-slate-600 mt-1 text-center">JPG format only Ã‚Â· Stored & viewed as JPG</p>
+                                            <p className="text-xs text-slate-600 mt-1 text-center">JPG format only Stored & viewed as JPG</p>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +212,7 @@ export default function CandidateRegisterPage() {
                                         <Field icon={User} placeholder="Full Name" required value={form.fullName} onChange={set('fullName')} />
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <Field icon={Phone} placeholder="Mobile Number" required type="tel" value={form.mobileNumber} onChange={set('mobileNumber')} pattern="^[6-9]\d{9}$" title="Enter valid 10-digit mobile number" />
-                                            <Field icon={Mail} placeholder="Email Address" required type="email" value={form.email} onChange={set('email')} />
+                                            <Field icon={Mail} placeholder="Email Address" required type="email" value={form.email} onChange={set('email')} pattern="^[a-zA-Z0-9._%+\-]+@gmail\.com$" title="Please enter a valid @gmail.com address (e.g., name@gmail.com)" />
                                         </div>
                                     </div>
                                 </div>
@@ -219,12 +220,13 @@ export default function CandidateRegisterPage() {
                                 {/* Qualification */}
                                 <div>
                                     <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-                                        Qualification <span className="text-slate-600 font-normal normal-case">(optional)</span>
+                                        Qualification
                                     </p>
                                     <div className="space-y-4">
                                         <div className="relative">
                                             <GraduationCap size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none z-10" />
                                             <select
+                                                required
                                                 value={form.qualification}
                                                 onChange={set('qualification')}
                                                 className="w-full pl-11 pr-4 py-3.5 border border-blue-100 rounded-xl text-sm bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all appearance-none"
@@ -235,20 +237,34 @@ export default function CandidateRegisterPage() {
                                                 ))}
                                             </select>
                                         </div>
-                                        <Field icon={Calendar} placeholder="Year of Pass Out (e.g. 2022)" value={form.yearOfPassOut} onChange={set('yearOfPassOut')} />
+                                        <AnimatePresence>
+                                            {form.qualification === 'Other' && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, height: 0 }}
+                                                    animate={{ opacity: 1, height: 'auto' }}
+                                                    exit={{ opacity: 0, height: 0 }}
+                                                    className="overflow-hidden"
+                                                >
+                                                    <div className="pt-4">
+                                                        <Field icon={GraduationCap} placeholder="Please specify your qualification" required value={form.customQualification} onChange={set('customQualification')} />
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                        <Field icon={Calendar} placeholder="Year of Pass Out (e.g. 2022)" value={form.yearOfPassOut} onChange={set('yearOfPassOut')} required />
                                     </div>
                                 </div>
 
                                 {/* Additional Details */}
                                 <div>
                                     <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-                                        Additional Details <span className="text-slate-600 font-normal normal-case">(optional)</span>
+                                        Additional Details
                                     </p>
                                     <div className="space-y-4">
-                                        <Field icon={MapPin} placeholder="Current Location" value={form.currentLocation} onChange={set('currentLocation')} />
-                                        <Field icon={Briefcase} placeholder="Applying For (Position)" value={form.applyingPosition} onChange={set('applyingPosition')} />
-                                        <Field icon={ClipboardList} placeholder="Purpose of Visit" value={form.purposeOfVisit} onChange={set('purposeOfVisit')} />
-                                        <Field icon={UserCheck} placeholder="Reference (if any)" value={form.reference} onChange={set('reference')} />
+                                        <Field icon={MapPin} placeholder="Current Location" value={form.currentLocation} onChange={set('currentLocation')} required />
+                                        <Field icon={Briefcase} placeholder="Applying For (Position)" value={form.applyingPosition} onChange={set('applyingPosition')} required />
+                                        <Field icon={ClipboardList} placeholder="Purpose of Visit" value={form.purposeOfVisit} onChange={set('purposeOfVisit')} required />
+                                        <Field icon={UserCheck} placeholder="Reference (optional)" value={form.reference} onChange={set('reference')} />
 
                                         {/* Resume Upload - PDF only */}
                                         <div>
@@ -266,7 +282,7 @@ export default function CandidateRegisterPage() {
                                                     className="w-full flex items-center justify-center gap-2 px-4 py-3.5 border-2 border-dashed border-blue-100 rounded-xl text-sm text-slate-500 hover:border-primary-400 hover:text-blue-600 hover:bg-blue-50/50 transition-all"
                                                 >
                                                     <Paperclip size={16} />
-                                                    <span>Upload Resume <span className="text-slate-600">(PDF only Ã‚Â· max 10 MB)</span></span>
+                                                    <span>Upload Resume <span className="text-slate-600">(PDF only max 10 MB)</span></span>
                                                 </button>
                                             ) : (
                                                 <div className="flex items-center justify-between px-4 py-3.5 border border-blue-500/30 bg-blue-50 rounded-xl">
@@ -364,7 +380,7 @@ export default function CandidateRegisterPage() {
                 </AnimatePresence>
 
                 <p className="text-center text-slate-600 mt-8 text-xs">
-                    &copy; {new Date().getFullYear()} QMS Ã‚Â· Queue Management System
+                    &copy; {new Date().getFullYear()} QMS Queue Management System
                 </p>
             </motion.div>
         </div>

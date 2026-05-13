@@ -23,7 +23,7 @@ public class DataInitializer {
             QueueStateRepository queueStateRepository, org.springframework.jdbc.core.JdbcTemplate jdbcTemplate) {
         return args -> {
             try {
-                jdbcTemplate.execute("ALTER TABLE users DROP CONSTRAINT users_role_check");
+                jdbcTemplate.execute("ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check");
                 log.info("Dropped users_role_check constraint");
             } catch (Exception e) {
                 log.warn("Could not drop constraint: " + e.getMessage());

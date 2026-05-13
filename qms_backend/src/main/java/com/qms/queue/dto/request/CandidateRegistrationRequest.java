@@ -19,14 +19,19 @@ public class CandidateRegistrationRequest {
     @Email
     private String email;
 
+    @NotBlank
     private String currentLocation;
 
+    @NotBlank
     private String applyingPosition;
 
+    @NotBlank
     private String purposeOfVisit;
 
+    @NotBlank
     private String qualification;
 
+    @NotBlank
     private String yearOfPassOut;
 
     private String reference;
