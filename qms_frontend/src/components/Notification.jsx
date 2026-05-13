@@ -30,21 +30,21 @@ export default function Notification({ type = 'success', message, onClose }) {
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
       className="fixed bottom-10 right-10 z-[1000] flex items-center"
     >
-      <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100 p-2 flex items-center min-w-[320px] max-w-md overflow-hidden">
-        <div className={`${config.bg} p-4 rounded-[1.5rem] text-white flex-shrink-0 shadow-lg`}>
+      <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-blue-100 p-2 flex items-center min-w-[320px] max-w-md overflow-hidden">
+        <div className={`${config.bg} p-4 rounded-[1.5rem] text-slate-900 flex-shrink-0 shadow-lg`}>
           <Icon size={24} />
         </div>
         <div className="px-6 py-2 flex-1">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-1">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">
             {config.label}
           </p>
-          <p className="text-sm font-bold text-black leading-snug">
+          <p className="text-sm font-bold text-slate-900 leading-snug">
             {message}
           </p>
         </div>
         <button 
           onClick={onClose}
-          className="p-4 text-gray-300 hover:text-black transition-colors"
+          className="p-4 text-slate-500 hover:text-slate-900 transition-colors"
         >
           <X size={18} />
         </button>

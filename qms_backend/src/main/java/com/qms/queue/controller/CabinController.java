@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cabins")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
 public class CabinController {
 
     private final CabinService cabinService;

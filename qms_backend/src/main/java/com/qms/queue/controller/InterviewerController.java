@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/interviewer")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN','INTERVIEWER')")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'INTERVIEWER')")
 @Slf4j
 public class InterviewerController {
 

@@ -28,7 +28,7 @@ public class FeedbackController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<ApiResponse<PageResponse<FeedbackResponse>>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size) {
@@ -37,7 +37,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/result/{result}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<ApiResponse<PageResponse<FeedbackResponse>>> getByResult(
             @PathVariable String result,
             @RequestParam(defaultValue = "0") int page,
@@ -47,7 +47,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/candidate/{candidateId}")
-    @PreAuthorize("hasAnyRole('ADMIN','INTERVIEWER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'INTERVIEWER')")
     public ResponseEntity<ApiResponse<FeedbackResponse>> getByCandidateId(
             @PathVariable Long candidateId) {
         return ResponseEntity.ok(ApiResponse.success("Feedback fetched",
@@ -55,7 +55,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/token/{tokenId}")
-    @PreAuthorize("hasAnyRole('ADMIN','INTERVIEWER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'INTERVIEWER')")
     public ResponseEntity<ApiResponse<FeedbackResponse>> getByTokenId(
             @PathVariable String tokenId) {
         return ResponseEntity.ok(ApiResponse.success("Feedback fetched",

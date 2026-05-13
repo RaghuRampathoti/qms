@@ -56,7 +56,7 @@ public class CandidateController {
         }
 
         @PostMapping("/api/candidates")
-        @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
         public ResponseEntity<ApiResponse<CandidateRegistrationResponse>> adminCreate(
                         @Valid @ModelAttribute CandidateRegistrationRequest request) {
                 CandidateRegistrationResponse response = candidateService.register(request);
@@ -64,7 +64,7 @@ public class CandidateController {
         }
 
         @GetMapping("/api/candidates")
-        @PreAuthorize("hasAnyRole('ADMIN','INTERVIEWER')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'INTERVIEWER')")
         public ResponseEntity<ApiResponse<PageResponse<CandidateResponse>>> getAll(
                         @RequestParam(value = "date", required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate date,
                         @RequestParam(value = "page", defaultValue = "0") int page,
@@ -74,7 +74,7 @@ public class CandidateController {
         }
 
         @GetMapping("/api/candidates/status/{status}")
-        @PreAuthorize("hasAnyRole('ADMIN','INTERVIEWER')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'INTERVIEWER')")
         public ResponseEntity<ApiResponse<PageResponse<CandidateResponse>>> getByStatus(
                         @PathVariable("status") String status,
                         @RequestParam(value = "date", required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate date,
@@ -85,28 +85,28 @@ public class CandidateController {
         }
 
         @GetMapping("/api/candidates/queue")
-        @PreAuthorize("hasAnyRole('ADMIN','INTERVIEWER')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'INTERVIEWER')")
         public ResponseEntity<ApiResponse<List<CandidateResponse>>> getWaitingQueue() {
                 return ResponseEntity.ok(ApiResponse.success("Queue fetched",
                                 candidateService.getWaitingQueue()));
         }
 
         @GetMapping("/api/candidates/{id}")
-        @PreAuthorize("hasAnyRole('ADMIN','INTERVIEWER')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'INTERVIEWER')")
         public ResponseEntity<ApiResponse<CandidateResponse>> getById(@PathVariable Long id) {
                 return ResponseEntity.ok(ApiResponse.success("Candidate fetched",
                                 candidateService.getById(id)));
         }
 
         @GetMapping("/api/candidates/token/{tokenId}")
-        @PreAuthorize("hasAnyRole('ADMIN','INTERVIEWER')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'INTERVIEWER')")
         public ResponseEntity<ApiResponse<CandidateResponse>> getByToken(@PathVariable String tokenId) {
                 return ResponseEntity.ok(ApiResponse.success("Candidate fetched",
                                 candidateService.getByTokenId(tokenId)));
         }
 
         @PutMapping("/api/candidates/{id}")
-        @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
         public ResponseEntity<ApiResponse<CandidateResponse>> update(
                         @PathVariable Long id,
                         @RequestBody UpdateCandidateRequest request) {
@@ -115,14 +115,14 @@ public class CandidateController {
         }
 
         @DeleteMapping("/api/candidates/{id}")
-        @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
         public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
                 candidateService.delete(id);
                 return ResponseEntity.ok(ApiResponse.success("Candidate deleted", null));
         }
 
         @GetMapping("/api/candidates/export/excel")
-        @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
         public ResponseEntity<byte[]> exportExcel(
                         @RequestParam(required = false) String status,
                         @RequestParam(required = false) String date) {

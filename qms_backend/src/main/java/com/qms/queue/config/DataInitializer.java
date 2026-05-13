@@ -20,8 +20,14 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initData(UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            QueueStateRepository queueStateRepository) {
+            QueueStateRepository queueStateRepository, org.springframework.jdbc.core.JdbcTemplate jdbcTemplate) {
         return args -> {
+            try {
+                jdbcTemplate.execute("ALTER TABLE users DROP CONSTRAINT users_role_check");
+                log.info("Dropped users_role_check constraint");
+            } catch (Exception e) {
+                log.warn("Could not drop constraint: " + e.getMessage());
+            }
             if (userRepository.findByUserName("admin").isEmpty()) {
                 userRepository.save(User.builder()
                         .userName("admin")
@@ -31,6 +37,16 @@ public class DataInitializer {
                         .active(true)
                         .build());
                 log.info("Default admin created — admin / admin123");
+            }
+            if (userRepository.findByUserName("superadmin").isEmpty()) {
+                userRepository.save(User.builder()
+                        .userName("superadmin")
+                        .email("superadmin@qms.com")
+                        .password(passwordEncoder.encode("superadmin123"))
+                        .role(Role.SUPER_ADMIN)
+                        .active(true)
+                        .build());
+                log.info("Default super admin created — superadmin / superadmin123");
             }
 
             if (queueStateRepository.count() == 0) {

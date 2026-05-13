@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 const getHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('token')}` })
 
 const RESULT_COLORS = {
-  SELECTED: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  SELECTED: 'bg-secondary-100 text-emerald-700 border-secondary-200',
   REJECTED: 'bg-red-100 text-red-700 border-red-200',
   ON_HOLD: 'bg-amber-100 text-amber-700 border-amber-200',
   NEXT_ROUND: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -118,17 +118,17 @@ export default function InterviewerFeedback() {
           </AnimatePresence>
 
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-24 text-gray-300">
+            <div className="flex flex-col items-center justify-center py-24 text-slate-600">
               <Loader2 className="animate-spin mb-4" size={48} />
-              <p className="text-gray-500 font-medium">Loading your feedback history...</p>
+              <p className="text-slate-500 font-medium">Loading your feedback history...</p>
             </div>
           ) : feedbacks.length === 0 ? (
-            <div className="bg-white rounded-3xl border border-dashed border-gray-200 p-16 text-center shadow-sm">
-              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageSquare size={32} className="text-gray-300" />
+            <div className="bg-white rounded-3xl border border-dashed border-blue-100 p-16 text-center shadow-sm">
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageSquare size={32} className="text-slate-600" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900">No feedback submitted yet</h3>
-              <p className="text-gray-500 max-w-xs mx-auto mt-1">Feedback will appear here once you complete an interview and submit the form.</p>
+              <h3 className="text-lg font-bold text-slate-900">No feedback submitted yet</h3>
+              <p className="text-slate-500 max-w-xs mx-auto mt-1">Feedback will appear here once you complete an interview and submit the form.</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -138,20 +138,20 @@ export default function InterviewerFeedback() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     key={f.id}
-                    className="bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
+                    className="bg-white rounded-3xl border border-blue-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
                   >
                     <div className="p-6">
                       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                         <div className="flex items-start space-x-4">
-                          <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-xl">
+                          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xl">
                             {f.candidateName.charAt(0)}
                           </div>
                           <div>
                             <div className="flex items-center space-x-3 mb-1">
-                              <h3 className="text-lg font-bold text-black">{f.candidateName}</h3>
-                              <span className="font-mono text-[10px] bg-gray-50 px-2 py-0.5 rounded border border-gray-100 text-gray-400">{f.tokenId}</span>
+                              <h3 className="text-lg font-bold text-slate-900">{f.candidateName}</h3>
+                              <span className="font-mono text-[10px] bg-white px-2 py-0.5 rounded border border-blue-100 text-slate-500">{f.tokenId}</span>
                             </div>
-                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
                               <span className="flex items-center"><Briefcase size={12} className="mr-1" /> {f.applyingPosition}</span>
                               <span className="flex items-center"><Calendar size={12} className="mr-1" /> {new Date(f.submittedAt).toLocaleDateString()}</span>
                             </div>
@@ -168,7 +168,7 @@ export default function InterviewerFeedback() {
                           </div>
                           <button
                             onClick={() => openEditModal(f)}
-                            className="p-2 bg-gray-50 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-xl transition-all"
+                            className="p-2 bg-white text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
                             title="Edit Feedback"
                           >
                             <Edit2 size={16} />
@@ -176,21 +176,21 @@ export default function InterviewerFeedback() {
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-6 border-t border-gray-50">
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Feedback Summary</p>
+                      <div className="mt-6 pt-6 border-t border-blue-50">
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Feedback Summary</p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="bg-emerald-50/30 p-4 rounded-xl border border-emerald-100/50">
-                            <p className="text-[10px] font-bold text-emerald-600 uppercase mb-1 flex items-center"><CheckCircle size={10} className="mr-1" /> Strengths</p>
-                            <p className="text-sm text-gray-600 italic">"{f.strengths || 'N/A'}"</p>
+                            <p className="text-[10px] font-bold text-secondary-600 uppercase mb-1 flex items-center"><CheckCircle size={10} className="mr-1" /> Strengths</p>
+                            <p className="text-sm text-slate-600 italic">"{f.strengths || 'N/A'}"</p>
                           </div>
                           <div className="bg-amber-50/30 p-4 rounded-xl border border-amber-100/50">
                             <p className="text-[10px] font-bold text-amber-600 uppercase mb-1 flex items-center"><Clock size={10} className="mr-1" /> Improvements</p>
-                            <p className="text-sm text-gray-600 italic">"{f.improvements || 'N/A'}"</p>
+                            <p className="text-sm text-slate-600 italic">"{f.improvements || 'N/A'}"</p>
                           </div>
                         </div>
-                        <div className="mt-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
-                          <p className="text-[10px] font-bold text-gray-400 uppercase mb-1 flex items-center"><MessageSquare size={10} className="mr-1" /> Comments</p>
-                          <p className="text-sm text-gray-600">{f.comments || 'No additional comments provided.'}</p>
+                        <div className="mt-4 bg-white p-4 rounded-xl border border-blue-100">
+                          <p className="text-[10px] font-bold text-slate-500 uppercase mb-1 flex items-center"><MessageSquare size={10} className="mr-1" /> Comments</p>
+                          <p className="text-sm text-slate-600">{f.comments || 'No additional comments provided.'}</p>
                         </div>
                       </div>
                     </div>
@@ -199,21 +199,21 @@ export default function InterviewerFeedback() {
               </div>
 
               <div className="flex items-center justify-between pt-4">
-                <p className="text-sm text-gray-500">
-                  Page <span className="font-bold text-black">{page + 1}</span> of <span className="font-bold text-black">{totalPages || 1}</span>
+                <p className="text-sm text-slate-500">
+                  Page <span className="font-bold text-slate-900">{page + 1}</span> of <span className="font-bold text-slate-900">{totalPages || 1}</span>
                 </p>
                 <div className="flex items-center space-x-2">
                   <button
                     disabled={page === 0}
                     onClick={() => setPage(p => p - 1)}
-                    className="p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:text-black hover:border-gray-400 disabled:opacity-30 transition-all"
+                    className="p-2 bg-white border border-blue-100 rounded-lg text-slate-500 hover:text-slate-900 hover:border-gray-400 disabled:opacity-30 transition-all"
                   >
                     <ChevronLeft size={18} />
                   </button>
                   <button
                     disabled={page + 1 >= totalPages}
                     onClick={() => setPage(p => p + 1)}
-                    className="p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:text-black hover:border-gray-400 disabled:opacity-30 transition-all"
+                    className="p-2 bg-white border border-blue-100 rounded-lg text-slate-500 hover:text-slate-900 hover:border-gray-400 disabled:opacity-30 transition-all"
                   >
                     <ChevronRight size={18} />
                   </button>
@@ -227,18 +227,18 @@ export default function InterviewerFeedback() {
       <ModalWrapper isOpen={showEditModal} onClose={() => setShowEditModal(false)}>
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-black text-black tracking-tight">Edit Feedback</h2>
-            <p className="text-gray-500 text-sm font-medium">Update your evaluation for {editingFeedback?.candidateName}</p>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Edit Feedback</h2>
+            <p className="text-slate-500 text-sm font-medium">Update your evaluation for {editingFeedback?.candidateName}</p>
           </div>
 
           <form onSubmit={handleUpdate} className="space-y-6">
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Interview Result</label>
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Interview Result</label>
                 <select
                   value={editForm.result}
                   onChange={e => setEditForm({ ...editForm, result: e.target.value })}
-                  className="w-full p-4 bg-gray-50 border border-transparent rounded-[1.25rem] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-teal-500/5 focus:border-teal-500 outline-none transition-all"
+                  className="w-full p-4 bg-white border border-transparent rounded-[1.25rem] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all"
                 >
                   <option value="SELECTED">SELECTED</option>
                   <option value="REJECTED">REJECTED</option>
@@ -247,14 +247,14 @@ export default function InterviewerFeedback() {
                 </select>
               </div>
               <div>
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Rating (1-5)</label>
-                <div className="flex items-center space-x-2 bg-gray-50 p-2 rounded-[1.25rem]">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Rating (1-5)</label>
+                <div className="flex items-center space-x-2 bg-white p-2 rounded-[1.25rem]">
                   {[1, 2, 3, 4, 5].map(star => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setEditForm({ ...editForm, rating: star })}
-                      className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${editForm.rating >= star ? 'bg-amber-100 text-amber-600' : 'text-gray-300 hover:bg-gray-100'}`}
+                      className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${editForm.rating >= star ? 'bg-amber-100 text-amber-600' : 'text-slate-600 hover:bg-blue-50'}`}
                     >
                       <Star size={20} className={editForm.rating >= star ? 'fill-amber-500' : ''} />
                     </button>
@@ -264,39 +264,39 @@ export default function InterviewerFeedback() {
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Key Strengths</label>
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Key Strengths</label>
               <textarea
                 value={editForm.strengths}
                 onChange={e => setEditForm({ ...editForm, strengths: e.target.value })}
                 placeholder="What did the candidate do well?"
-                className="w-full p-5 bg-gray-50 border border-transparent rounded-[1.5rem] text-sm font-medium focus:bg-white focus:ring-4 focus:ring-teal-500/5 focus:border-teal-500 outline-none transition-all h-24 resize-none"
+                className="w-full p-5 bg-white border border-transparent rounded-[1.5rem] text-sm font-medium focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all h-24 resize-none"
               />
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Areas for Improvement</label>
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Areas for Improvement</label>
               <textarea
                 value={editForm.improvements}
                 onChange={e => setEditForm({ ...editForm, improvements: e.target.value })}
                 placeholder="Where can the candidate improve?"
-                className="w-full p-5 bg-gray-50 border border-transparent rounded-[1.5rem] text-sm font-medium focus:bg-white focus:ring-4 focus:ring-teal-500/5 focus:border-teal-500 outline-none transition-all h-24 resize-none"
+                className="w-full p-5 bg-white border border-transparent rounded-[1.5rem] text-sm font-medium focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all h-24 resize-none"
               />
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Detailed Comments</label>
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Detailed Comments</label>
               <textarea
                 value={editForm.comments}
                 onChange={e => setEditForm({ ...editForm, comments: e.target.value })}
                 placeholder="Any additional notes..."
-                className="w-full p-5 bg-gray-50 border border-transparent rounded-[1.5rem] text-sm font-medium focus:bg-white focus:ring-4 focus:ring-teal-500/5 focus:border-teal-500 outline-none transition-all h-32 resize-none"
+                className="w-full p-5 bg-white border border-transparent rounded-[1.5rem] text-sm font-medium focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all h-32 resize-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-teal-600 text-white py-5 rounded-[1.5rem] font-black hover:bg-teal-700 transition-all shadow-xl shadow-teal-600/20 active:scale-95 disabled:opacity-60"
+              className="w-full bg-blue-600 text-white py-5 rounded-[1.5rem] font-black hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 active:scale-95 disabled:opacity-60"
             >
               {submitting ? 'UPDATING...' : 'SAVE CHANGES'}
             </button>
@@ -314,7 +314,7 @@ function ModalWrapper({ isOpen, onClose, children }) {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/40 backdrop-blur-md" onClick={onClose} />
           <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="bg-white w-full max-w-2xl rounded-[3rem] p-10 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <button onClick={onClose} className="absolute top-8 right-8 p-3 rounded-2xl text-gray-400 hover:bg-gray-50 transition-colors"><X size={20} /></button>
+            <button onClick={onClose} className="absolute top-8 right-8 p-3 rounded-2xl text-slate-500 hover:bg-white transition-colors"><X size={20} /></button>
             {children}
           </motion.div>
         </div>

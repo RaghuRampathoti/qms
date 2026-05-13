@@ -14,14 +14,17 @@ const ProtectedRoute = ({ children, role }) => {
   const user = JSON.parse(localStorage.getItem('user') || '{}')
 
   if (!token) return <Navigate to="/login" replace />
-  if (role && user.role !== role) return <Navigate to="/login" replace />
+  if (role) {
+    const roles = Array.isArray(role) ? role : [role]
+    if (!roles.includes(user.role)) return <Navigate to="/login" replace />
+  }
 
   return children
 }
 
 function App() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen text-slate-900">
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<CandidateRegisterPage />} />
@@ -29,7 +32,7 @@ function App() {
         <Route
           path="/admin/dashboard"
           element={
-            <ProtectedRoute role="ADMIN">
+            <ProtectedRoute role={['ADMIN', 'SUPER_ADMIN']}>
               <AdminDashboard />
             </ProtectedRoute>
           }
@@ -37,7 +40,7 @@ function App() {
         <Route
           path="/admin/users"
           element={
-            <ProtectedRoute role="ADMIN">
+            <ProtectedRoute role={['ADMIN', 'SUPER_ADMIN']}>
               <ManageUsers />
             </ProtectedRoute>
           }
@@ -45,7 +48,7 @@ function App() {
         <Route
           path="/admin/cabins"
           element={
-            <ProtectedRoute role="ADMIN">
+            <ProtectedRoute role={['ADMIN', 'SUPER_ADMIN']}>
               <ManageCabins />
             </ProtectedRoute>
           }
@@ -53,7 +56,7 @@ function App() {
         <Route
           path="/admin/candidates"
           element={
-            <ProtectedRoute role="ADMIN">
+            <ProtectedRoute role={['ADMIN', 'SUPER_ADMIN']}>
               <ManageCandidates />
             </ProtectedRoute>
           }
@@ -61,7 +64,7 @@ function App() {
         <Route
           path="/admin/feedback"
           element={
-            <ProtectedRoute role="ADMIN">
+            <ProtectedRoute role={['ADMIN', 'SUPER_ADMIN']}>
               <ManageFeedback />
             </ProtectedRoute>
           }

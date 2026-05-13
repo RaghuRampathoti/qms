@@ -14,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.qms.queue.repository.CabinRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.qms.queue.exceptions.BusinessException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -27,6 +30,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse create(CreateUserRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
+            if ("ADMIN".equalsIgnoreCase(request.getRole()) || "SUPER_ADMIN".equalsIgnoreCase(request.getRole())) {
+                throw new BusinessException("Only Super Admins can create administrative users.");
+            }
+        }
+        
         if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateResourceException("Username already exists: " + request.getUserName());
         }
@@ -53,7 +63,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponse update(Long id, UpdateUserRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = findById(id);
+
+        if (auth != null && auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
+            if (user.getRole() == Role.ADMIN || user.getRole() == Role.SUPER_ADMIN) {
+                throw new BusinessException("Only Super Admins can modify administrative users.");
+            }
+        }
 
         userRepository.findByUserName(request.getUserName())
                 .ifPresent(existing -> {
@@ -141,7 +158,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponse toggleActive(Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = findById(id);
+        
+        if (auth != null && auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
+            if (user.getRole() == Role.ADMIN || user.getRole() == Role.SUPER_ADMIN) {
+                throw new BusinessException("Only Super Admins can modify administrative users.");
+            }
+        }
+        
         boolean newStatus = !user.getActive();
         user.setActive(newStatus);
         
@@ -159,7 +184,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = findById(id);
+
+        if (auth != null && auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
+            if (user.getRole() == Role.ADMIN || user.getRole() == Role.SUPER_ADMIN) {
+                throw new BusinessException("Only Super Admins can delete administrative users.");
+            }
+        }
+
         userRepository.delete(user);
     }
 

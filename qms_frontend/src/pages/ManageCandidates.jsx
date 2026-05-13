@@ -26,23 +26,23 @@ const STATUS_STYLES = {
         label: 'Called'
     },
     IN_PROGRESS: {
-        bg: 'bg-teal-50',
-        text: 'text-teal-700',
-        border: 'border-teal-100',
-        dot: 'bg-teal-500',
+        bg: 'bg-blue-50',
+        text: 'text-blue-600',
+        border: 'border-blue-100',
+        dot: 'bg-blue-500',
         label: 'In Interview'
     },
     COMPLETED: {
         bg: 'bg-emerald-50',
         text: 'text-emerald-700',
         border: 'border-emerald-100',
-        dot: 'bg-emerald-400',
+        dot: 'bg-secondary-400',
         label: 'Completed'
     },
     CANCELLED: {
-        bg: 'bg-gray-100',
-        text: 'text-gray-500',
-        border: 'border-gray-200',
+        bg: 'bg-blue-50',
+        text: 'text-slate-500',
+        border: 'border-blue-100',
         dot: 'bg-gray-400',
         label: 'Cancelled'
     },
@@ -245,9 +245,9 @@ export default function ManageCandidates() {
 
     const filtered = searchQuery
         ? candidates.filter(c =>
-            c.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            c.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            c.mobileNumber.includes(searchQuery) ||
+            (c.fullName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (c.email || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (c.mobileNumber || '').includes(searchQuery) ||
             (c.tokenId || '').toLowerCase().includes(searchQuery.toLowerCase())
         )
         : candidates
@@ -291,21 +291,21 @@ export default function ManageCandidates() {
                     <div className="flex flex-col md:flex-row md:items-center justify-end gap-2 mb-4">
                         <button
                             onClick={() => setShowQrModal(true)}
-                            className="p-2 bg-white border border-gray-200 rounded-xl text-gray-700 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all group"
+                            className="p-2 bg-white border border-blue-100 rounded-xl text-slate-600 hover:text-blue-600 hover:border-blue-500/30 hover:bg-blue-50 transition-all group"
                             title="Registration QR"
                         >
                             <QrCode size={20} />
                         </button>
                         <button
                             onClick={handleExport}
-                            className="flex items-center space-x-2 bg-white border border-gray-200 px-4 py-2 rounded-xl text-gray-700 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all font-bold text-sm"
+                            className="flex items-center space-x-2 bg-white border border-blue-100 px-4 py-2 rounded-xl text-slate-600 hover:text-blue-600 hover:border-blue-500/30 hover:bg-blue-50 transition-all font-bold text-sm"
                         >
                             <Download size={18} />
                             <span>Export Data</span>
                         </button>
                         <button
                             onClick={() => setShowAddModal(true)}
-                            className="flex items-center space-x-2 bg-teal-600 px-4 py-2 rounded-xl text-white hover:bg-teal-700 transition-all font-bold text-sm shadow-lg shadow-teal-600/25 active:scale-95"
+                            className="flex items-center space-x-2 bg-blue-600 px-4 py-2 rounded-xl text-white hover:bg-blue-700 transition-all font-bold text-sm shadow-lg shadow-blue-600/25 active:scale-95"
                         >
                             <Plus size={20} />
                             <span>New Candidate</span>
@@ -316,20 +316,20 @@ export default function ManageCandidates() {
                         {[
                             { label: 'Total Applicants', value: totalElements, icon: User, color: 'text-blue-600', bg: 'bg-blue-50' },
                             { label: 'Waitlist', value: candidates.filter(c => c.status === 'WAITING').length, icon: ClipboardList, color: 'text-amber-600', bg: 'bg-amber-50' },
-                            { label: 'Live Interviews', value: candidates.filter(c => c.status === 'IN_PROGRESS').length, icon: Briefcase, color: 'text-teal-600', bg: 'bg-teal-50' },
-                            { label: 'Completed', value: candidates.filter(c => c.status === 'COMPLETED').length, icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                            { label: 'Live Interviews', value: candidates.filter(c => c.status === 'IN_PROGRESS').length, icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
+                            { label: 'Completed', value: candidates.filter(c => c.status === 'COMPLETED').length, icon: CheckCircle2, color: 'text-secondary-600', bg: 'bg-emerald-50' },
                         ].map((stat, i) => (
-                            <div key={i} className="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm">
+                            <div key={i} className="bg-white p-3 rounded-2xl border border-blue-100 shadow-sm">
                                 <div className={`w-8 h-8 ${stat.bg} ${stat.color} rounded-lg flex items-center justify-center mb-2`}>
                                     <stat.icon size={16} />
                                 </div>
-                                <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
-                                <h3 className="text-xl font-black text-black mt-0.5">{stat.value}</h3>
+                                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
+                                <h3 className="text-xl font-black text-slate-900 mt-0.5">{stat.value}</h3>
                             </div>
                         ))}
                     </div>
 
-                    <div className="bg-white rounded-2xl border border-gray-100 p-4 mb-4 shadow-sm">
+                    <div className="bg-white rounded-2xl border border-blue-100 p-4 mb-4 shadow-sm">
                         <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
                             <div className="flex flex-wrap gap-2">
                                 {STATUS_FILTERS.map(s => (
@@ -337,8 +337,8 @@ export default function ManageCandidates() {
                                         key={s}
                                         onClick={() => { setStatusFilter(s); setPage(0) }}
                                         className={`px-3 py-1.5 rounded-lg text-[10px] font-black transition-all border ${statusFilter === s
-                                            ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/20'
-                                            : 'bg-white text-gray-400 border-gray-100 hover:border-gray-300 hover:text-black'
+                                            ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/20'
+                                            : 'bg-white text-slate-500 border-blue-100 hover:border-blue-200 hover:text-white'
                                             }`}
                                     >
                                         {s === 'ALL' ? 'ALL CANDIDATES' : STATUS_STYLES[s]?.label.toUpperCase() || s}
@@ -351,55 +351,55 @@ export default function ManageCandidates() {
                                     type="date"
                                     value={dateFilter}
                                     onChange={e => { setDateFilter(e.target.value); setPage(0); }}
-                                    className="px-3 py-2.5 bg-gray-50 border border-transparent rounded-xl text-sm focus:outline-none focus:bg-white focus:ring-4 focus:ring-teal-500/5 focus:border-teal-500 transition-all font-medium text-gray-500"
+                                    className="px-3 py-2.5 bg-white border border-transparent rounded-xl text-sm focus:outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all font-medium text-slate-500"
                                 />
                                 <div className="relative flex-1 lg:w-96 group">
-                                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-teal-500 transition-colors" />
+                                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
                                     <input
                                         value={searchQuery}
                                         onChange={e => setSearchQuery(e.target.value)}
                                         placeholder="Search by name, email, or token ID..."
-                                        className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl text-sm focus:outline-none focus:bg-white focus:ring-4 focus:ring-teal-500/5 focus:border-teal-500 transition-all font-medium"
+                                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-transparent rounded-xl text-sm focus:outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all font-medium"
                                     />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="bg-white rounded-[2.5rem] border border-blue-100 shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
                                 <thead>
-                                    <tr className="border-b border-gray-50 bg-gray-50/30">
-                                        <th className="px-5 py-3 text-[10px] font-black text-gray-400 uppercase tracking-widest">Candidate Information</th>
-                                        <th className="px-4 py-3 text-[10px] font-black text-gray-400 uppercase tracking-widest">Token & Queue</th>
-                                        <th className="px-4 py-3 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
-                                        <th className="px-4 py-3 text-[10px] font-black text-gray-400 uppercase tracking-widest">Applying For</th>
-                                        <th className="px-5 py-3 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
+                                    <tr className="border-b border-blue-50 bg-white/30">
+                                        <th className="px-5 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest">Candidate Information</th>
+                                        <th className="px-4 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest">Token & Queue</th>
+                                        <th className="px-4 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest">Status</th>
+                                        <th className="px-4 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest">Applying For</th>
+                                        <th className="px-5 py-3 text-right text-[10px] font-black text-slate-500 uppercase tracking-widest">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-50">
+                                <tbody className="divide-y divide-blue-50">
                                     {loading ? (
                                         Array.from({ length: 8 }).map((_, i) => (
                                             <tr key={i} className="animate-pulse">
                                                 <td className="px-8 py-6 flex items-center space-x-4">
-                                                    <div className="w-12 h-12 bg-gray-100 rounded-2xl" />
+                                                    <div className="w-12 h-12 bg-blue-50 rounded-2xl" />
                                                     <div className="space-y-2">
-                                                        <div className="h-4 bg-gray-100 rounded w-32" />
-                                                        <div className="h-3 bg-gray-50 rounded w-48" />
+                                                        <div className="h-4 bg-blue-50 rounded w-32" />
+                                                        <div className="h-3 bg-white rounded w-48" />
                                                     </div>
                                                 </td>
-                                                <td colSpan={4} className="px-6 py-6"><div className="h-4 bg-gray-50 rounded w-full" /></td>
+                                                <td colSpan={4} className="px-6 py-6"><div className="h-4 bg-white rounded w-full" /></td>
                                             </tr>
                                         ))
                                     ) : filtered.length === 0 ? (
                                         <tr>
                                             <td colSpan={5} className="px-8 py-32 text-center">
-                                                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                                    <User size={32} className="text-gray-200" />
+                                                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+                                                    <User size={32} className="text-slate-800" />
                                                 </div>
-                                                <h3 className="text-xl font-bold text-black mb-1">No candidates match your criteria</h3>
-                                                <p className="text-gray-400 text-sm">Try broadening your search or adding a new candidate.</p>
+                                                <h3 className="text-xl font-bold text-slate-900 mb-1">No candidates match your criteria</h3>
+                                                <p className="text-slate-500 text-sm">Try broadening your search or adding a new candidate.</p>
                                             </td>
                                         </tr>
                                     ) : (
@@ -410,19 +410,19 @@ export default function ManageCandidates() {
                                                     key={c.id}
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
-                                                    className="hover:bg-gray-50/50 transition-colors group"
+                                                    className="hover:bg-white transition-colors group"
                                                 >
                                                     <td className="px-5 py-3">
                                                         <div className="flex items-center space-x-3">
                                                             <div className="relative">
-                                                                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 text-white font-black text-sm flex items-center justify-center shadow">
-                                                                    {c.fullName.charAt(0).toUpperCase()}
+                                                                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-slate-900 font-black text-sm flex items-center justify-center shadow">
+                                                                    {(c.fullName || '?').charAt(0).toUpperCase()}
                                                                 </div>
                                                                 <span className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${style.dot}`} />
                                                             </div>
                                                             <div>
-                                                                <p className="font-bold text-black text-sm">{c.fullName}</p>
-                                                                <div className="flex items-center text-gray-400 text-xs mt-0.5 space-x-3">
+                                                                <p className="font-bold text-slate-900 text-sm">{c.fullName}</p>
+                                                                <div className="flex items-center text-slate-500 text-xs mt-0.5 space-x-3">
                                                                     <span className="flex items-center"><Mail size={12} className="mr-1.5" /> {c.email}</span>
                                                                     <span className="flex items-center"><Phone size={12} className="mr-1.5" /> {c.mobileNumber}</span>
                                                                 </div>
@@ -431,17 +431,17 @@ export default function ManageCandidates() {
                                                     </td>
                                                     <td className="px-4 py-3">
                                                         <div className="space-y-1">
-                                                            <span className="font-mono text-xs font-black text-teal-700 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-100/50">
+                                                            <span className="font-mono text-xs font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100/50">
                                                                 {c.tokenId || 'NO TOKEN'}
                                                             </span>
                                                             {c.status === 'COMPLETED' ? (
-                                                                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter pl-1 space-y-0.5">
-                                                                    <p>Start: <span className="text-teal-700 font-black">{c.interviewStartTime ? new Date(c.interviewStartTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A'}</span></p>
+                                                                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter pl-1 space-y-0.5">
+                                                                    <p>Start: <span className="text-blue-600 font-black">{c.interviewStartTime ? new Date(c.interviewStartTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A'}</span></p>
                                                                     <p>End: <span className="text-emerald-700 font-black">{c.interviewEndTime ? new Date(c.interviewEndTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A'}</span></p>
                                                                 </div>
                                                             ) : (
-                                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter pl-1">
-                                                                    Queue Position: <span className="text-black font-black">{c.queueNumber != null ? `#${c.queueNumber}` : 'NA'}</span>
+                                                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter pl-1">
+                                                                    Queue Position: <span className="text-slate-900 font-black">{c.queueNumber != null ? `#${c.queueNumber}` : 'NA'}</span>
                                                                 </p>
                                                             )}
                                                         </div>
@@ -452,8 +452,8 @@ export default function ManageCandidates() {
                                                         </span>
                                                     </td>
                                                     <td className="px-4 py-3">
-                                                        <div className="flex items-center text-gray-600 font-bold text-sm">
-                                                            <Briefcase size={14} className="mr-2 text-gray-400" />
+                                                        <div className="flex items-center text-slate-600 font-bold text-sm">
+                                                            <Briefcase size={14} className="mr-2 text-slate-500" />
                                                             {c.applyingPosition || 'General Visit'}
                                                         </div>
                                                     </td>
@@ -461,14 +461,14 @@ export default function ManageCandidates() {
                                                         <div className="flex items-center justify-end space-x-2">
                                                             <button
                                                                 onClick={() => setShowDetailModal(c)}
-                                                                className="p-2 bg-gray-50 rounded-xl text-gray-400 hover:text-teal-600 hover:bg-teal-50 transition-all border border-transparent hover:border-teal-100"
+                                                                className="p-2 bg-white rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all border border-transparent hover:border-blue-100"
                                                                 title="Quick View"
                                                             >
                                                                 <Eye size={18} />
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDelete(c.id, c.fullName)}
-                                                                className="p-2 bg-gray-50 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
+                                                                className="p-2 bg-white rounded-xl text-slate-500 hover:text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
                                                                 title="Delete"
                                                             >
                                                                 <Trash2 size={18} />
@@ -484,22 +484,22 @@ export default function ManageCandidates() {
                         </div>
 
                         {totalPages > 1 && (
-                            <div className="px-8 py-6 bg-gray-50/30 border-t border-gray-50 flex items-center justify-between">
-                                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
-                                    Page <span className="text-black">{page + 1}</span> of {totalPages} · <span className="text-black">{totalElements}</span> Candidates
+                            <div className="px-8 py-6 bg-white/30 border-t border-blue-50 flex items-center justify-between">
+                                <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">
+                                    Page <span className="text-slate-900">{page + 1}</span> of {totalPages} Ã‚Â· <span className="text-slate-900">{totalElements}</span> Candidates
                                 </p>
                                 <div className="flex items-center space-x-3">
                                     <button
                                         onClick={() => setPage(p => Math.max(0, p - 1))}
                                         disabled={page === 0}
-                                        className="p-3 bg-white rounded-2xl border border-gray-100 text-gray-500 hover:text-teal-600 hover:border-teal-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
+                                        className="p-3 bg-white rounded-2xl border border-blue-100 text-slate-500 hover:text-blue-600 hover:border-blue-500/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
                                     >
                                         <ChevronLeft size={18} />
                                     </button>
                                     <button
                                         onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                                         disabled={page >= totalPages - 1}
-                                        className="p-3 bg-white rounded-2xl border border-gray-100 text-gray-500 hover:text-teal-600 hover:border-teal-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
+                                        className="p-3 bg-white rounded-2xl border border-blue-100 text-slate-500 hover:text-blue-600 hover:border-blue-500/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
                                     >
                                         <ChevronRight size={18} />
                                     </button>
@@ -512,38 +512,38 @@ export default function ManageCandidates() {
 
             <ModalWrapper isOpen={showQrModal} onClose={() => setShowQrModal(false)}>
                 <div className="text-center">
-                    <div className="w-16 h-16 bg-teal-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
-                        <QrCode size={32} className="text-teal-600" />
+                    <div className="w-16 h-16 bg-blue-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
+                        <QrCode size={32} className="text-blue-600" />
                     </div>
-                    <h2 className="text-2xl font-black text-black mb-2 tracking-tight">Registration Access</h2>
-                    <p className="text-gray-500 text-sm mb-8 font-medium">Share this code with candidates to allow self-registration.</p>
+                    <h2 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">Registration Access</h2>
+                    <p className="text-slate-500 text-sm mb-8 font-medium">Share this code with candidates to allow self-registration.</p>
 
-                    <div className="bg-white p-6 rounded-[2.5rem] inline-block mb-8 shadow-inner border border-gray-100">
+                    <div className="bg-white p-6 rounded-[2.5rem] inline-block mb-8 shadow-inner border border-blue-100">
                         <img src={qrUrl} alt="QR" className="w-64 h-64 rounded-3xl" />
                     </div>
 
                     <div className="flex gap-4">
-                        <a href={qrUrl} download className="flex-1 bg-teal-600 text-white py-4 rounded-[1.25rem] font-black text-sm hover:bg-teal-700 transition-all shadow-lg shadow-teal-600/20">Download QR</a>
+                        <a href={qrUrl} download className="flex-1 bg-blue-600 text-white py-4 rounded-[1.25rem] font-black text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20">Download QR</a>
                         <button onClick={() => {
                             navigator.clipboard.writeText(`${window.location.origin}/register`);
                             showMsg('success', 'Link copied to clipboard!');
-                        }} className="flex-1 bg-gray-50 text-gray-700 py-4 rounded-[1.25rem] font-black text-sm hover:bg-gray-100 transition-all border border-gray-100">Copy Link</button>
+                        }} className="flex-1 bg-white text-slate-600 py-4 rounded-[1.25rem] font-black text-sm hover:bg-blue-50 transition-all border border-blue-100">Copy Link</button>
                     </div>
                 </div>
             </ModalWrapper>
 
             <ModalWrapper isOpen={showAddModal} onClose={() => { setShowAddModal(false); setResumeFile(null); setPhotoFile(null); setPhotoPreview(null) }} size="max-w-xl">
-                <h2 className="text-3xl font-black text-black mb-2 tracking-tight">Add Candidate</h2>
-                <p className="text-gray-500 text-sm mb-8 font-medium">Manually register a candidate into the interview queue.</p>
+                <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Add Candidate</h2>
+                <p className="text-slate-500 text-sm mb-8 font-medium">Manually register a candidate into the interview queue.</p>
                 <form onSubmit={handleAddCandidate} className="space-y-5">
 
                     {/* Photo Upload */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-between ml-1">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                Photo <span className="text-gray-300 font-normal normal-case">(optional)</span>
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                                Photo <span className="text-slate-600 font-normal normal-case">(optional)</span>
                             </label>
-                            <span className="text-[9px] font-bold text-teal-600/60 uppercase">JPG only · max 10 MB</span>
+                            <span className="text-[9px] font-bold text-blue-600/60 uppercase">JPG only Ã‚Â· max 10 MB</span>
                         </div>
                         <input
                             ref={photoInputRef}
@@ -555,17 +555,17 @@ export default function ManageCandidates() {
                         <div className="flex items-center gap-4">
                             {photoPreview ? (
                                 <div className="relative shrink-0">
-                                    <img src={photoPreview} alt="Preview" className="w-16 h-16 rounded-xl object-cover border-2 border-teal-200" />
+                                    <img src={photoPreview} alt="Preview" className="w-16 h-16 rounded-xl object-cover border-2 border-blue-500/30" />
                                     <button type="button" onClick={() => { setPhotoFile(null); setPhotoPreview(null); if (photoInputRef.current) photoInputRef.current.value = '' }} className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center">
                                         <X size={10} />
                                     </button>
                                 </div>
                             ) : (
-                                <div className="w-16 h-16 shrink-0 rounded-xl bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center">
-                                    <ImageIcon size={20} className="text-gray-300" />
+                                <div className="w-16 h-16 shrink-0 rounded-xl bg-white border-2 border-dashed border-blue-100 flex items-center justify-center">
+                                    <ImageIcon size={20} className="text-slate-600" />
                                 </div>
                             )}
-                            <button type="button" onClick={() => photoInputRef.current?.click()} className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-50 border border-transparent rounded-[1.25rem] text-sm font-bold text-gray-400 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50 transition-all">
+                            <button type="button" onClick={() => photoInputRef.current?.click()} className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white border border-transparent rounded-[1.25rem] text-sm font-bold text-slate-500 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all">
                                 <ImageIcon size={16} />
                                 <span>{photoFile ? 'Change Photo' : 'Upload Photo (JPG)'}</span>
                             </button>
@@ -584,10 +584,10 @@ export default function ManageCandidates() {
                     {/* Qualification fields */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Qualification</label>
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Qualification</label>
                             <div className="relative group">
-                                <GraduationCap size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-teal-600 transition-colors" />
-                                <select value={formData.qualification} onChange={e => setFormData(f => ({ ...f, qualification: e.target.value }))} className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-transparent rounded-[1.25rem] text-sm font-bold focus:outline-none focus:bg-white focus:ring-4 focus:ring-teal-500/5 focus:border-teal-500 transition-all appearance-none">
+                                <GraduationCap size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-600 transition-colors" />
+                                <select value={formData.qualification} onChange={e => setFormData(f => ({ ...f, qualification: e.target.value }))} className="w-full pl-14 pr-6 py-4 bg-white border border-transparent rounded-[1.25rem] text-sm font-bold focus:outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all appearance-none">
                                     <option value="">Select Qualification</option>
                                     {QUALIFICATIONS.map(q => <option key={q} value={q}>{q}</option>)}
                                 </select>
@@ -603,32 +603,32 @@ export default function ManageCandidates() {
                     {/* Resume Upload - PDF only */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-between ml-1">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                Resume <span className="text-gray-300 font-normal normal-case">(optional)</span>
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                                Resume <span className="text-slate-600 font-normal normal-case">(optional)</span>
                             </label>
-                            <span className="text-[9px] font-bold text-teal-600/60 uppercase">PDF only · max 10 MB</span>
+                            <span className="text-[9px] font-bold text-blue-600/60 uppercase">PDF only Ã‚Â· max 10 MB</span>
                         </div>
                         <input ref={resumeInputRef} type="file" accept=".pdf,application/pdf" className="hidden" onChange={handleResumeChange} />
                         {!resumeFile ? (
-                            <button type="button" onClick={() => resumeInputRef.current?.click()} className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gray-50 border border-transparent rounded-[1.25rem] text-sm font-bold text-gray-400 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50 transition-all">
+                            <button type="button" onClick={() => resumeInputRef.current?.click()} className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-white border border-transparent rounded-[1.25rem] text-sm font-bold text-slate-500 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all">
                                 <Paperclip size={18} />
                                 <span>Click to attach PDF resume</span>
                             </button>
                         ) : (
-                            <div className="flex items-center justify-between px-6 py-4 bg-teal-50 border border-teal-200 rounded-[1.25rem]">
+                            <div className="flex items-center justify-between px-6 py-4 bg-blue-50 border border-blue-500/30 rounded-[1.25rem]">
                                 <div className="flex items-center gap-3 min-w-0">
-                                    <Paperclip size={18} className="text-teal-600 shrink-0" />
-                                    <span className="text-sm font-bold text-teal-800 truncate">{resumeFile.name}</span>
-                                    <span className="text-xs text-teal-500 shrink-0">({(resumeFile.size / 1024).toFixed(0)} KB)</span>
+                                    <Paperclip size={18} className="text-blue-600 shrink-0" />
+                                    <span className="text-sm font-bold text-blue-800 truncate">{resumeFile.name}</span>
+                                    <span className="text-xs text-blue-500 shrink-0">({(resumeFile.size / 1024).toFixed(0)} KB)</span>
                                 </div>
-                                <button type="button" onClick={() => { setResumeFile(null); if (resumeInputRef.current) resumeInputRef.current.value = '' }} className="ml-3 p-1.5 rounded-xl hover:bg-teal-100 text-teal-500 shrink-0">
+                                <button type="button" onClick={() => { setResumeFile(null); if (resumeInputRef.current) resumeInputRef.current.value = '' }} className="ml-3 p-1.5 rounded-xl hover:bg-blue-100 text-blue-500 shrink-0">
                                     <X size={16} />
                                 </button>
                             </div>
                         )}
                     </div>
 
-                    <button type="submit" disabled={formLoading} className="w-full bg-teal-600 text-white py-5 rounded-3xl font-black hover:bg-teal-700 transition-all shadow-xl shadow-teal-600/20 mt-4 active:scale-95 disabled:opacity-60">
+                    <button type="submit" disabled={formLoading} className="w-full bg-blue-600 text-white py-5 rounded-3xl font-black hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 mt-4 active:scale-95 disabled:opacity-60">
                         {formLoading ? 'PROCESSING...' : 'REGISTER CANDIDATE'}
                     </button>
                 </form>
@@ -637,25 +637,25 @@ export default function ManageCandidates() {
             <ModalWrapper isOpen={!!showDetailModal} onClose={() => setShowDetailModal(null)}>
                 {showDetailModal && (
                     <>
-                        <div className="flex items-center space-x-5 mb-10 pb-10 border-b border-gray-50">
+                        <div className="flex items-center space-x-5 mb-10 pb-10 border-b border-blue-50">
                             {showDetailModal.photoUrl ? (
                                 <img
                                     src={showDetailModal.photoUrl}
                                     alt={showDetailModal.fullName}
-                                    className="w-20 h-20 rounded-[2rem] object-cover border-4 border-teal-100 shadow-xl"
+                                    className="w-20 h-20 rounded-[2rem] object-cover border-4 border-blue-100 shadow-xl"
                                 />
                             ) : (
-                                <div className="w-20 h-20 rounded-[2rem] bg-teal-600 text-white font-black text-3xl flex items-center justify-center shadow-2xl shadow-teal-600/20">
-                                    {showDetailModal.fullName.charAt(0).toUpperCase()}
+                                <div className="w-20 h-20 rounded-[2rem] bg-blue-600 text-white font-black text-3xl flex items-center justify-center shadow-2xl shadow-blue-600/20">
+                                    {(showDetailModal.fullName || '?').charAt(0).toUpperCase()}
                                 </div>
                             )}
                             <div>
-                                <h2 className="text-3xl font-black text-black leading-none">{showDetailModal.fullName}</h2>
+                                <h2 className="text-3xl font-black text-slate-900 leading-none">{showDetailModal.fullName || 'Unknown'}</h2>
                                 <div className="flex items-center mt-3">
                                     <span className={`px-4 py-1.5 rounded-2xl text-[10px] font-black uppercase tracking-widest border ${STATUS_STYLES[showDetailModal.status].bg} ${STATUS_STYLES[showDetailModal.status].text} ${STATUS_STYLES[showDetailModal.status].border}`}>
                                         {STATUS_STYLES[showDetailModal.status].label}
                                     </span>
-                                    <span className="ml-3 font-mono text-sm font-bold text-gray-400">#{showDetailModal.tokenId}</span>
+                                    <span className="ml-3 font-mono text-sm font-bold text-slate-500">#{showDetailModal.tokenId}</span>
                                 </div>
                             </div>
                         </div>
@@ -674,12 +674,12 @@ export default function ManageCandidates() {
                             ].map((item, i) => (
                                 item.value ? (
                                     <div key={i} className="flex items-start space-x-4">
-                                        <div className="p-2.5 bg-gray-50 rounded-xl text-gray-400">
+                                        <div className="p-2.5 bg-white rounded-xl text-slate-500">
                                             <item.icon size={18} />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">{item.label}</p>
-                                            <p className="text-base font-bold text-black">{item.value || 'N/A'}</p>
+                                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-0.5">{item.label}</p>
+                                            <p className="text-base font-bold text-slate-900">{item.value || 'N/A'}</p>
                                         </div>
                                     </div>
                                 ) : null
@@ -688,25 +688,25 @@ export default function ManageCandidates() {
                             {/* Photo Download */}
                             {showDetailModal.photoUrl && (
                                 <div className="flex items-start space-x-4">
-                                    <div className="p-2.5 bg-gray-50 rounded-xl text-gray-400">
+                                    <div className="p-2.5 bg-white rounded-xl text-slate-500">
                                         <ImageIcon size={18} />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Photo</p>
+                                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Photo</p>
                                         <div className="flex gap-3 mt-1">
                                             <a
                                                 href={showDetailModal.photoUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-sm font-bold text-teal-600 hover:underline"
+                                                className="text-sm font-bold text-blue-600 hover:underline"
                                             >
                                                 View Photo
                                             </a>
-                                            <span className="text-gray-300">|</span>
+                                            <span className="text-slate-600">|</span>
                                             <a
                                                 href={showDetailModal.photoUrl}
-                                                download={`${showDetailModal.fullName.replace(/\s+/g, '_')}_photo.jpg`}
-                                                className="text-sm font-bold text-teal-600 hover:underline"
+                                                download={`${(showDetailModal.fullName || 'candidate').replace(/\s+/g, '_')}_photo.jpg`}
+                                                className="text-sm font-bold text-blue-600 hover:underline"
                                             >
                                                 Download JPG
                                             </a>
@@ -718,25 +718,25 @@ export default function ManageCandidates() {
                             {/* Resume Download */}
                             {showDetailModal.resumeUrl && (
                                 <div className="flex items-start space-x-4">
-                                    <div className="p-2.5 bg-gray-50 rounded-xl text-gray-400">
+                                    <div className="p-2.5 bg-white rounded-xl text-slate-500">
                                         <Paperclip size={18} />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Resume</p>
+                                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Resume</p>
                                         <div className="flex gap-3 mt-1">
                                             <a
                                                 href={showDetailModal.resumeUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-sm font-bold text-teal-600 hover:underline"
+                                                className="text-sm font-bold text-blue-600 hover:underline"
                                             >
                                                 View PDF
                                             </a>
-                                            <span className="text-gray-300">|</span>
+                                            <span className="text-slate-600">|</span>
                                             <a
                                                 href={showDetailModal.resumeUrl}
-                                                download={`${showDetailModal.fullName.replace(/\s+/g, '_')}_resume.pdf`}
-                                                className="text-sm font-bold text-teal-600 hover:underline"
+                                                download={`${(showDetailModal.fullName || 'candidate').replace(/\s+/g, '_')}_resume.pdf`}
+                                                className="text-sm font-bold text-blue-600 hover:underline"
                                             >
                                                 Download PDF
                                             </a>
@@ -759,7 +759,7 @@ function ModalWrapper({ isOpen, onClose, children, size = "max-w-md" }) {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/40 backdrop-blur-md" onClick={onClose} />
                     <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className={`bg-white w-full ${size} rounded-[3rem] p-10 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar`}>
-                        <button onClick={onClose} className="absolute top-8 right-8 p-3 rounded-2xl text-gray-400 hover:bg-gray-50 transition-colors"><X size={20} /></button>
+                        <button onClick={onClose} className="absolute top-8 right-8 p-3 rounded-2xl text-slate-500 hover:bg-white transition-colors"><X size={20} /></button>
                         {children}
                     </motion.div>
                 </div>
@@ -772,20 +772,20 @@ function FormField({ icon: Icon, label, value, onChange, placeholder, required, 
     return (
         <div className="space-y-2">
             <div className="flex items-center justify-between ml-1">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                     {label}{required && <span className="text-red-500 ml-1">*</span>}
                 </label>
-                {hint && <span className="text-[9px] font-bold text-teal-600/60 uppercase">{hint}</span>}
+                {hint && <span className="text-[9px] font-bold text-blue-600/60 uppercase">{hint}</span>}
             </div>
             <div className="relative group">
-                <Icon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-teal-600 transition-colors" />
+                <Icon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-600 transition-colors" />
                 <input
                     type={type}
                     required={required}
                     value={value}
                     onChange={e => onChange(e.target.value)}
                     placeholder={placeholder}
-                    className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-transparent rounded-[1.25rem] text-sm font-bold focus:outline-none focus:bg-white focus:ring-4 focus:ring-teal-500/5 focus:border-teal-500 transition-all"
+                    className="w-full pl-14 pr-6 py-4 bg-white border border-transparent rounded-[1.25rem] text-sm font-bold focus:outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all"
                 />
             </div>
         </div>

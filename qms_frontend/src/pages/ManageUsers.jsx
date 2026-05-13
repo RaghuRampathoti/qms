@@ -8,7 +8,8 @@ import axios from 'axios'
 export default function ManageUsers() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('ADMIN')
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+  const [activeTab, setActiveTab] = useState(currentUser.role === 'SUPER_ADMIN' ? 'ADMIN' : 'INTERVIEWER')
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('CREATE')
@@ -21,7 +22,6 @@ export default function ManageUsers() {
     role: 'ADMIN'
   })
 
-  const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
 
   const fetchUsers = async () => {
     setLoading(true)
@@ -118,10 +118,11 @@ export default function ManageUsers() {
 
         <div className="flex-1 p-6 lg:p-12">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-            <div className="flex space-x-2 bg-gray-100 p-1 rounded-2xl w-full sm:w-auto">
+            <div className="flex space-x-2 bg-blue-50 p-1 rounded-2xl w-full sm:w-auto">
+              {currentUser.role === 'SUPER_ADMIN' && (
               <button
                 onClick={() => setActiveTab('ADMIN')}
-                className={`flex-1 sm:flex-none px-6 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'ADMIN' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black'
+                className={`flex-1 sm:flex-none px-6 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'ADMIN' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
                   }`}
               >
                 <div className="flex items-center justify-center space-x-2">
@@ -129,9 +130,10 @@ export default function ManageUsers() {
                   <span>Admins</span>
                 </div>
               </button>
+              )}
               <button
                 onClick={() => setActiveTab('INTERVIEWER')}
-                className={`flex-1 sm:flex-none px-6 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'INTERVIEWER' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black'
+                className={`flex-1 sm:flex-none px-6 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'INTERVIEWER' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
                   }`}
               >
                 <div className="flex items-center justify-center space-x-2">
@@ -143,57 +145,57 @@ export default function ManageUsers() {
 
             <button
               onClick={() => handleOpenModal('CREATE')}
-              className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-2xl font-bold flex items-center justify-center space-x-2 transition-all shadow-lg shadow-teal-600/20 active:scale-95"
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-bold flex items-center justify-center space-x-2 transition-all shadow-lg shadow-blue-600/20 active:scale-95"
             >
               <Plus size={20} />
               <span>Add {activeTab === 'ADMIN' ? 'Admin' : 'Interviewer'}</span>
             </button>
           </div>
 
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-3xl border border-blue-100 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="bg-gray-50/50">
-                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">User Details</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Contact Info</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right">Actions</th>
+                  <tr className="bg-white">
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">User Details</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Contact Info</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Status</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-blue-50">
                   {loading ? (
                     <tr>
-                      <td colSpan="4" className="px-6 py-12 text-center text-gray-400 font-medium">Loading users...</td>
+                      <td colSpan="4" className="px-6 py-12 text-center text-slate-500 font-medium">Loading users...</td>
                     </tr>
                   ) : filteredUsers.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className="px-6 py-12 text-center text-gray-400 font-medium">No users found.</td>
+                      <td colSpan="4" className="px-6 py-12 text-center text-slate-500 font-medium">No users found.</td>
                     </tr>
                   ) : (
                     filteredUsers.map((u) => (
-                      <tr key={u.id} className={`hover:bg-gray-50/50 transition-colors ${!u.active ? 'opacity-50' : ''}`}>
+                      <tr key={u.id} className={`hover:bg-white transition-colors ${!u.active ? 'opacity-50' : ''}`}>
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-4">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${u.role === 'ADMIN' ? 'bg-purple-500' : 'bg-teal-500'
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-slate-900 font-bold ${u.role === 'ADMIN' ? 'bg-purple-500' : 'bg-blue-500'
                               }`}>
                               {u.userName.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <p className="text-sm font-bold text-black">{u.userName}</p>
-                              <p className="text-[10px] font-bold text-gray-400 uppercase">{u.role}</p>
+                              <p className="text-sm font-bold text-slate-900">{u.userName}</p>
+                              <p className="text-[10px] font-bold text-slate-500 uppercase">{u.role}</p>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <div className="flex flex-col space-y-1 text-sm text-gray-600">
+                          <div className="flex flex-col space-y-1 text-sm text-slate-600">
                             <div className="flex items-center space-x-2">
-                              <Mail size={14} className="text-gray-400" />
+                              <Mail size={14} className="text-slate-500" />
                               <span>{u.email}</span>
                             </div>
                             {u.phoneNumber && (
                               <div className="flex items-center space-x-2">
-                                <Phone size={14} className="text-gray-400" />
+                                <Phone size={14} className="text-slate-500" />
                                 <span>{u.phoneNumber}</span>
                               </div>
                             )}
@@ -201,7 +203,7 @@ export default function ManageUsers() {
                         </td>
                         <td className="px-6 py-4">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold border ${u.active
-                              ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
+                              ? 'bg-emerald-50 text-secondary-600 border-secondary-200'
                               : 'bg-red-50 text-red-600 border-red-200'
                             }`}>
                             {u.active ? 'Active' : 'Inactive'}
@@ -221,7 +223,7 @@ export default function ManageUsers() {
                                 onClick={() => handleToggleActive(u.id)}
                                 className={`p-2 rounded-xl transition-colors ${u.active
                                     ? 'text-red-600 hover:bg-red-50'
-                                    : 'text-emerald-600 hover:bg-emerald-50'
+                                    : 'text-secondary-600 hover:bg-emerald-50'
                                   }`}
                                 title={u.active ? 'Deactivate User' : 'Activate User'}
                               >
@@ -256,13 +258,13 @@ export default function ManageUsers() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="relative bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden z-[70]"
             >
-              <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-black">
+              <div className="p-6 border-b border-blue-100 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-slate-900">
                   {modalMode === 'CREATE' ? 'Add New' : 'Edit'} {formData.role === 'ADMIN' ? 'Admin' : 'Interviewer'}
                 </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors"
+                  className="p-2 text-slate-500 hover:text-slate-600 hover:bg-blue-50 rounded-xl transition-colors"
                 >
                   <X size={20} />
                 </button>
@@ -270,69 +272,69 @@ export default function ManageUsers() {
 
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase">Username</label>
+                  <label className="text-xs font-bold text-slate-500 uppercase">Username</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Users size={16} className="text-gray-400" />
+                      <Users size={16} className="text-slate-500" />
                     </div>
                     <input
                       type="text"
                       required
                       value={formData.userName}
                       onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-blue-100 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                       placeholder="Enter username"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase">Email Address</label>
+                  <label className="text-xs font-bold text-slate-500 uppercase">Email Address</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail size={16} className="text-gray-400" />
+                      <Mail size={16} className="text-slate-500" />
                     </div>
                     <input
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-blue-100 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                       placeholder="Enter email"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase">Phone Number</label>
+                  <label className="text-xs font-bold text-slate-500 uppercase">Phone Number</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Phone size={16} className="text-gray-400" />
+                      <Phone size={16} className="text-slate-500" />
                     </div>
                     <input
                       type="tel"
                       value={formData.phoneNumber}
                       onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-blue-100 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                       placeholder="Enter phone number"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase">
+                  <label className="text-xs font-bold text-slate-500 uppercase">
                     {modalMode === 'CREATE' ? 'Password' : 'New Password (Optional)'}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock size={16} className="text-gray-400" />
+                      <Lock size={16} className="text-slate-500" />
                     </div>
                     <input
                       type="password"
                       required={modalMode === 'CREATE'}
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-blue-100 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                       placeholder={modalMode === 'CREATE' ? "Create a secure password" : "Leave blank to keep current"}
                     />
                   </div>
@@ -342,13 +344,13 @@ export default function ManageUsers() {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-6 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+                    className="px-6 py-3 rounded-xl font-bold text-slate-600 hover:bg-blue-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-3 rounded-xl font-bold bg-teal-600 text-white hover:bg-teal-700 shadow-lg shadow-teal-600/20 active:scale-95 transition-all"
+                    className="px-6 py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20 active:scale-95 transition-all"
                   >
                     {modalMode === 'CREATE' ? 'Create User' : 'Save Changes'}
                   </button>
