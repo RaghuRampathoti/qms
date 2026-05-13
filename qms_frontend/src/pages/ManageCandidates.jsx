@@ -172,6 +172,13 @@ export default function ManageCandidates() {
 
     const handleAddCandidate = async (e) => {
         e.preventDefault()
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/i;
+        if (!emailRegex.test(formData.email.trim())) {
+            showMsg('error', 'Wrong email address or invalid address. Email must end with .com (e.g., gmail.com)');
+            return;
+        }
+
         setFormLoading(true)
         try {
             const fd = new FormData()
@@ -591,7 +598,7 @@ export default function ManageCandidates() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <FormField icon={User} label="FULL NAME" required value={formData.fullName} onChange={v => setFormData(f => ({ ...f, fullName: v }))} placeholder="Rahul Sharma" />
-                        <FormField icon={Mail} label="EMAIL ADDRESS" required type="email" value={formData.email} onChange={v => setFormData(f => ({ ...f, email: v }))} placeholder="rahul@gmail.com" pattern="^[a-zA-Z0-9._%+\-]+@gmail\.com$" title="Please enter a valid @gmail.com address (e.g., name@gmail.com)" />
+                        <FormField icon={Mail} label="EMAIL ADDRESS" required type="email" value={formData.email} onChange={v => setFormData(f => ({ ...f, email: v }))} placeholder="rahul@gmail.com" />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <FormField icon={Phone} label="MOBILE NUMBER" required type="tel" value={formData.mobileNumber} onChange={v => setFormData(f => ({ ...f, mobileNumber: v }))} placeholder="9876543210" hint="10-digit number" />

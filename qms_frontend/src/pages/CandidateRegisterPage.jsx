@@ -78,6 +78,13 @@ export default function CandidateRegisterPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/i;
+        if (!emailRegex.test(form.email.trim())) {
+            setError('Wrong email address or invalid address. Email must end with .com (e.g., gmail.com)');
+            return;
+        }
+
         setLoading(true)
         setError('')
         try {
